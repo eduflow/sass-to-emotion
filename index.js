@@ -26,15 +26,20 @@ function scssFileToJs(filePath) {
         path.dirname(scssFileToJs(path.resolve(filePath))),
         path.join(process.cwd(), 'src', 'styles'),
       );
-      const js = transform(
-        css,
-        filePath,
-        pathToVariables ? path.join(pathToVariables, 'variables') : './variables',
-      );
 
-      if (!js) return null;
+      try {
+        const js = transform(
+          css,
+          filePath,
+          pathToVariables ? path.join(pathToVariables, 'variables') : './variables',
+        );
+        if (!js) return null;
 
-      return [filePath, js];
+        return [filePath, js];
+      } catch (e) {
+        console.trace(e);
+        return null;
+      }
     })
     .filter(Boolean);
 
